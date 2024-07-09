@@ -17,6 +17,8 @@ public class PantallaJuego extends JFrame {
     private JLabel cronometroLabel;
     private Timer timer;
     private int segundosTranscurridos;
+    private int indicePrimeraCarta = -1;
+    private int indiceSegundaCarta = -1;
 
     public PantallaJuego(String nombreJugador) {
         this.nombreJugador = nombreJugador;
@@ -27,26 +29,21 @@ public class PantallaJuego extends JFrame {
 
         // Definir URLs de las imágenes
         String[] urls = {
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=600/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/42.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=600/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/40.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=600/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/24.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=630/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/22.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=630/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/21.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=630/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/14.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=630/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/15.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=600/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/16.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=600/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/doomfordos.jpg",
-                "https://cdn.tutsplus.com/cdn-cgi/image/width=630/psd/uploads/legacy/psdtutsarticles/linkb_60vgamecovers/7.jpg",
+            "https://w7.pngwing.com/pngs/722/1011/png-transparent-logo-icon-instagram-logo-instagram-logo-purple-violet-text-thumbnail.png",
+            "https://w7.pngwing.com/pngs/110/230/png-transparent-whatsapp-application-software-message-icon-whatsapp-logo-whats-app-logo-logo-grass-mobile-phones-thumbnail.png",
+            "https://w7.pngwing.com/pngs/208/269/png-transparent-youtube-play-button-computer-icons-youtube-youtube-logo-angle-rectangle-logo-thumbnail.png",
+            "https://w7.pngwing.com/pngs/213/828/png-transparent-facebook-logo-facebook-messenger-logo-social-media-icon-facebook-icon-blue-text-rectangle-thumbnail.png",
+            "https://w7.pngwing.com/pngs/975/52/png-transparent-white-telephone-logo-computer-icons-telephone-mobile-phones-telephone-number-miscellaneous-text-telephone-call-thumbnail.png",
+            "https://w7.pngwing.com/pngs/814/840/png-transparent-tiktok-tiktok-logo-tiktok-icon-thumbnail.png",
+            "https://w7.pngwing.com/pngs/708/311/png-transparent-icon-logo-twitter-logo-twitter-logo-blue-social-media-area-thumbnail.png",
+            "https://w7.pngwing.com/pngs/745/644/png-transparent-email-logo-icon-email-black-envelope-logo-miscellaneous-text-mobile-phones-thumbnail.png",
+            "https://w7.pngwing.com/pngs/654/821/png-transparent-swoosh-nike-just-do-it-logo-nike-angle-adidas-symbol-thumbnail.png",
+            "https://w7.pngwing.com/pngs/752/373/png-transparent-computer-icons-facebook-logo-facebook-logo-fine-art-thumbnail.png",
         };
 
-        // Agregar URLs a la lista de imágenes
-        imagenes.addAll(Arrays.asList(urls));
-
-        // Validar que se hayan definido suficientes URLs
-        if (imagenes.size() < 10) {
-            JOptionPane.showMessageDialog(null, "No se han definido suficientes URLs de imágenes.");
-            dispose();
-            return;
+        // Duplicar las URLs si es necesario para alcanzar las 20 cartas
+        while (imagenes.size() < 20) {
+            imagenes.addAll(Arrays.asList(urls));
         }
 
         // Mezclar las imágenes
@@ -66,12 +63,7 @@ public class PantallaJuego extends JFrame {
             carta.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Lógica para descubrir la carta
-                    if (!descubiertas[indice]) {
-                        carta.setIcon(new ImageIcon(imagenes.get(indice))); // Mostrar imagen desde URL
-                        descubiertas[indice] = true;
-                        // Añadir lógica para verificar pares, etc.
-                    }
+                    manejarClickCarta(indice, carta);
                 }
             });
             cartas.add(carta);
@@ -102,6 +94,43 @@ public class PantallaJuego extends JFrame {
         iniciarCronometro();
     }
 
+    private void manejarClickCarta(int indice, JButton carta) {
+        if (descubiertas[indice]) {
+            return;
+        }
+
+        carta.setIcon(new ImageIcon(new ImageIcon(imagenes.get(indice)).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH))); // Mostrar imagen desde URL
+        descubiertas[indice] = true;
+
+        if (indicePrimeraCarta == -1) {
+            indicePrimeraCarta = indice;
+        } else if (indiceSegundaCarta == -1) {
+            indiceSegundaCarta = indice;
+            verificarPares();
+        }
+    }
+
+    private void verificarPares() {
+        if (imagenes.get(indicePrimeraCarta).equals(imagenes.get(indiceSegundaCarta))) {
+            indicePrimeraCarta = -1;
+            indiceSegundaCarta = -1;
+        } else {
+            Timer temporizador = new Timer(1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    cartas.get(indicePrimeraCarta).setIcon(null);
+                    cartas.get(indiceSegundaCarta).setIcon(null);
+                    descubiertas[indicePrimeraCarta] = false;
+                    descubiertas[indiceSegundaCarta] = false;
+                    indicePrimeraCarta = -1;
+                    indiceSegundaCarta = -1;
+                }
+            });
+            temporizador.setRepeats(false);
+            temporizador.start();
+        }
+    }
+
     private void iniciarCronometro() {
         timer = new Timer(1000, new ActionListener() {
             @Override
@@ -125,6 +154,4 @@ public class PantallaJuego extends JFrame {
         int segundos = segundosTranscurridos % 60;
         cronometroLabel.setText(String.format("Tiempo: %02d:%02d:%02d", horas, minutos, segundos));
     }
-
-    // Métodos adicionales para la lógica del juego
 }
