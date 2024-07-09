@@ -4,13 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class PantallaInicio extends JFrame {
     private JTextField nombreJugador;
 
     public PantallaInicio() {
         setTitle("Pantalla de Inicio");
-        setSize(600, 400);
+        setSize(800, 600); // Tamaño más grande para visualizar correctamente los logos
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -20,27 +22,50 @@ public class PantallaInicio extends JFrame {
 
         // Título e información
         JLabel informacion = new JLabel("<html><div style='text-align: center;'>"
-                + "Universidad Tecnológica de Panamá<br>"
+                + "<span style='font-size: 15px;'>Universidad Tecnológica de Panamá<br>"
                 + "Facultad de Sistemas Computacionales<br>"
                 + "Ingeniería de Software<br>"
-                + "1SF123<br><br>"
+                + "15F123<br><br>"
                 + "Integrantes:<br>"
-                + "Juan Zhu   8-1010-701<br>"
-                + "Jeremy Martínez   8-1024-1470<br>"
-                + "Rafael Gómez   8-1011-1757<br>"
-                + "Alex De Boutad   8-1015-1644<br><br>"
+                + "Juan Zhu - 8-1010-701<br>"
+                + "Jeremy Martínez - 8-1024-14701<br>"
+                + "Rafael Gómez - 8-1011-1757<br>"
+                + "Alex De Bouza - 8-1015-1644<br><br>"
                 + "Profesor: Rodrigo Yángüez<br>"
                 + "12/07/2024<br><br>"
-                + "</div></html>", JLabel.CENTER);
+                + "</span></div></html>", JLabel.CENTER);
         panel.add(informacion, BorderLayout.CENTER);
 
         // Logos
         JPanel logosPanel = new JPanel();
-        logosPanel.setLayout(new GridLayout(1, 2));
-        JLabel logoUni = new JLabel(new ImageIcon("/mnt/data/logo_universidad.png")); // Ruta de la imagen
-        JLabel logoFac = new JLabel(new ImageIcon("/mnt/data/logo_facultad.png")); // Ruta de la imagen
-        logosPanel.add(logoUni);
-        logosPanel.add(logoFac);
+        logosPanel.setLayout(new BorderLayout());
+
+        // Logo de la universidad (izquierda)
+        try {
+            URL urlLogoUni = new URL("https://utp.ac.pa/documentos/2015/imagen/logo_utp_1_72.png"); // URL de la imagen
+            ImageIcon iconUni = new ImageIcon(urlLogoUni);
+            Image imageUni = iconUni.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Ajustar tamaño
+            ImageIcon scaledIconUni = new ImageIcon(imageUni);
+            JLabel logoUni = new JLabel(scaledIconUni);
+            logoUni.setPreferredSize(new Dimension(100, 100)); // Tamaño preferido
+            logosPanel.add(logoUni, BorderLayout.WEST);
+        } catch (MalformedURLException e) {
+            e.printStackTrace(); // Manejar el error de URL mal formada
+        }
+
+        // Logo de la facultad (derecha)
+        try {
+            URL urlLogoFac = new URL("https://fisc.utp.ac.pa/sites/fisc.utp.ac.pa/files/documentos/2020/imagen/logo_en_contactenos.png"); // URL de la imagen
+            ImageIcon iconFac = new ImageIcon(urlLogoFac);
+            Image imageFac = iconFac.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Ajustar tamaño
+            ImageIcon scaledIconFac = new ImageIcon(imageFac);
+            JLabel logoFac = new JLabel(scaledIconFac);
+            logoFac.setPreferredSize(new Dimension(100, 100)); // Tamaño preferido
+            logosPanel.add(logoFac, BorderLayout.EAST);
+        } catch (MalformedURLException e) {
+            e.printStackTrace(); // Manejar el error de URL mal formada
+        }
+
         panel.add(logosPanel, BorderLayout.NORTH);
 
         // Botón para avanzar
@@ -57,5 +82,12 @@ public class PantallaInicio extends JFrame {
 
         // Añadir panel al frame
         add(panel);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            PantallaInicio inicio = new PantallaInicio();
+            inicio.setVisible(true);
+        });
     }
 }
