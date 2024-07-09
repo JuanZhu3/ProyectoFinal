@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class PantallaInicio extends JFrame {
     private JTextField nombreJugador;
@@ -21,44 +18,42 @@ public class PantallaInicio extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        // Título
-        JLabel titulo = new JLabel("<html><h1>Nombre de la Universidad</h1><h2>Facultad</h2></html>", JLabel.CENTER);
-        panel.add(titulo, BorderLayout.NORTH);
+        // Título e información
+        JLabel informacion = new JLabel("<html><div style='text-align: center;'>"
+                + "Universidad Tecnológica de Panamá<br>"
+                + "Facultad de Sistemas Computacionales<br>"
+                + "Ingeniería de Software<br>"
+                + "1SF123<br><br>"
+                + "Integrantes:<br>"
+                + "Juan Zhu   8-1010-701<br>"
+                + "Jeremy Martínez   8-1024-1470<br>"
+                + "Rafael Gómez   8-1011-1757<br>"
+                + "Alex De Boutad   8-1015-1644<br><br>"
+                + "Profesor: Rodrigo Yángüez<br>"
+                + "12/07/2024<br><br>"
+                + "</div></html>", JLabel.CENTER);
+        panel.add(informacion, BorderLayout.CENTER);
 
-        // Logos (puedes añadir tus imágenes aquí)
+        // Logos
         JPanel logosPanel = new JPanel();
         logosPanel.setLayout(new GridLayout(1, 2));
-        JLabel logoUni = new JLabel(new ImageIcon("logo_universidad.png")); // Reemplaza con la ruta de tu imagen
-        JLabel logoFac = new JLabel(new ImageIcon("logo_facultad.png")); // Reemplaza con la ruta de tu imagen
+        JLabel logoUni = new JLabel(new ImageIcon("/mnt/data/logo_universidad.png")); // Ruta de la imagen
+        JLabel logoFac = new JLabel(new ImageIcon("/mnt/data/logo_facultad.png")); // Ruta de la imagen
         logosPanel.add(logoUni);
         logosPanel.add(logoFac);
-        panel.add(logosPanel, BorderLayout.CENTER);
+        panel.add(logosPanel, BorderLayout.NORTH);
 
-        // Nombre del jugador
-        JPanel nombrePanel = new JPanel();
-        nombrePanel.setLayout(new GridLayout(2, 1));
-        JLabel nombreLabel = new JLabel("Ingrese su nombre:", JLabel.CENTER);
-        nombreJugador = new JTextField();
-        nombrePanel.add(nombreLabel);
-        nombrePanel.add(nombreJugador);
-        panel.add(nombrePanel, BorderLayout.SOUTH);
-
-        // Botón para empezar el juego
-        JButton empezarButton = new JButton("Empezar Juego");
-        empezarButton.addActionListener(new ActionListener() {
+        // Botón para avanzar
+        JButton avanzarButton = new JButton("Avanzar");
+        avanzarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nombre = nombreJugador.getText();
-                if (nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Por favor, ingrese su nombre.");
-                } else {
-                    PantallaJuego pantallaJuego = new PantallaJuego(nombre);
-                    pantallaJuego.setVisible(true);
-                    dispose();
-                }
+                PantallaDescripcion descripcion = new PantallaDescripcion();
+                descripcion.setVisible(true);
+                dispose();
             }
         });
-        panel.add(empezarButton, BorderLayout.EAST);
+        panel.add(avanzarButton, BorderLayout.SOUTH);
 
         // Añadir panel al frame
         add(panel);

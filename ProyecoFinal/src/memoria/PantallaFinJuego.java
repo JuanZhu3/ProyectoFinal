@@ -53,13 +53,17 @@ public class PantallaFinJuego extends JFrame {
 
         // Mostrar ranking
         JTextArea rankingArea = new JTextArea();
-        StringBuilder rankingTexto = new StringBuilder("Ranking:\n");
-        for (int i = 0; i < rankingTiempos.size(); i++) {
-            rankingTexto.append((i + 1) + ". " + rankingTiempos.get(i) + " segundos\n");
+        rankingArea.setEditable(false);
+        StringBuilder rankingTexto = new StringBuilder("Ranking de tiempos:\n");
+        for (int t : rankingTiempos) {
+            rankingTexto.append(t).append(" segundos\n");
         }
         rankingArea.setText(rankingTexto.toString());
-        rankingArea.setEditable(false);
         panel.add(new JScrollPane(rankingArea), BorderLayout.CENTER);
+
+        // Panel para botones
+        JPanel botonesPanel = new JPanel();
+        botonesPanel.setLayout(new FlowLayout());
 
         // Botón para salir
         JButton salirButton = new JButton("Salir");
@@ -69,7 +73,22 @@ public class PantallaFinJuego extends JFrame {
                 System.exit(0);
             }
         });
-        panel.add(salirButton, BorderLayout.SOUTH);
+        botonesPanel.add(salirButton);
+
+        // Botón para volver a jugar
+        JButton jugarDeNuevoButton = new JButton("Jugar de nuevo");
+        jugarDeNuevoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PantallaDescripcion descripcion = new PantallaDescripcion();
+                descripcion.setVisible(true);
+                dispose();
+            }
+        });
+        botonesPanel.add(jugarDeNuevoButton);
+
+        // Añadir botones al panel principal
+        panel.add(botonesPanel, BorderLayout.SOUTH);
 
         // Añadir panel al frame
         add(panel);
